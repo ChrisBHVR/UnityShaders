@@ -3,6 +3,7 @@
     Properties
     {
     }
+
     SubShader
     {
         Tags { "RenderType"="Opaque" }
@@ -11,16 +12,31 @@
         Pass
         {
             CGPROGRAM
-
-            #pragma vertex vert_img
+            #pragma vertex vert
             #pragma fragment frag
 
             #include "UnityCG.cginc"
 
-            fixed4 frag (v2f_img i) : SV_Target
+            struct v2f
             {
-                fixed3 color = 1;
-                return fixed4(color, 1.0);
+                float4 vertex:   SV_POSITION;
+                float4 position: TEXCOORD1;
+                float2 uv:       TEXCOORD0;
+            };
+
+            v2f vert(appdata_base v)
+            {
+                v2f output;
+                output.vertex   = UnityObjectToClipPos(v.vertex);
+                output.position = v.vertex;
+                output.uv       = v.texcoord;
+                return output;
+            }
+
+            fixed4 frag(v2f i) : SV_Target
+            {
+                fixed3 colour = saturate(i.position * 2);
+                return fixed4(colour, 1);
             }
             ENDCG
         }

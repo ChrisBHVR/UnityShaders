@@ -96,6 +96,7 @@
     <None Include="Assets\Shaders\Shader17Unlit.shader" />
     <None Include="Assets\Shaders\Shader19Unlit.shader" />
     <None Include="Assets\Shaders\Shader59Lit.shader" />
+    <None Include="Assets\Shaders\Shader1Unlit.shader" />
     <None Include="Assets\Shaders\Shader34Unlit.shader" />
     <None Include="Assets\Shaders\Shader26Unlit.shader" />
     <None Include="Assets\Shaders\Shader31Unlit.shader" />
@@ -118,6 +119,7 @@
     <None Include="Assets\Shaders\Shader44Unlit.shader" />
     <None Include="Assets\Shaders\Shader51Lit.shader" />
     <None Include="Assets\Shaders\Shader21Unlit.shader" />
+    <None Include="Assets\Shaders\noiseSimplex.cginc" />
     <None Include="Assets\Shaders\Shader47UnLit.shader" />
     <None Include="Assets\Shaders\Shader67Unlit.shader" />
     <None Include="Assets\Shaders\Shader49UnLit.shader" />

@@ -2,9 +2,10 @@
 {
     Properties
     {
-        _ColorA("Color A", Color) = (1,0,0,1)
-        _ColorB("Color B", Color) = (0,0,1,1) 
+        _ColourA("Colour A", Color) = (1, 0, 0, 1)
+        _ColourB("Colour B", Color) = (0, 0, 1, 1)
     }
+
     SubShader
     {
         Tags { "RenderType"="Opaque" }
@@ -18,13 +19,14 @@
 
             #include "UnityCG.cginc"
 
-            fixed4 _ColorA;
-            fixed4 _ColorB;
+            fixed4 _ColourA;
+            fixed4 _ColourB;
 
-            fixed4 frag (v2f_img i) : SV_Target
+            fixed4 frag(v2f_img i) : SV_Target
             {
-                fixed3 color = 1;
-                return fixed4(color, 1.0);
+                float t = i.uv.x;
+                fixed3 colour = lerp(_ColourA, _ColourB, t);
+                return fixed4(colour, 1);
             }
             ENDCG
         }
