@@ -1,35 +1,31 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+[RequireComponent(typeof(Renderer))]
 public class Scene67Cube : MonoBehaviour
 {
-    Material material;
-    Vector4 center;
-    float startY;
+    private static readonly int Center = Shader.PropertyToID("_Center");
 
-    // Start is called before the first frame update
-    void Start()
+    private Material material;
+    private Vector4 center;
+    private float startY;
+
+    private void Start()
     {
         Renderer rend = GetComponent<Renderer>();
-        material = rend.material;
-        center = new Vector4();
-        startY = transform.position.y;
+        this.material = rend.material;
+        this.startY   = this.transform.position.y;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        transform.Rotate(0.0f, 0.4f, 0.0f);
-
+        // ReSharper disable once LocalVariableHidesMember
+        Transform transform = this.transform;
+        transform.Rotate(0f, 0.4f, 0f);
         Vector3 pos = transform.position;
-        pos.y = startY + (float)(Math.Sin(Time.time * 3.0) * 0.2);
+        pos.y       = this.startY + (Mathf.Sin(Time.time * 3f) * 0.2f);
         transform.position = pos;
-
-        center = pos;
-
-        material.SetVector("_Center", center);
+        this.center        = pos;
+        this.material.SetVector(Center, this.center);
         //Debug.Log(mouse);
     }
 }

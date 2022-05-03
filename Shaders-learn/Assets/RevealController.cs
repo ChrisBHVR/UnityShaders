@@ -1,23 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class RevealController : MonoBehaviour
 {
-    public Material material;
+    private static readonly int RevealTime = Shader.PropertyToID("_RevealTime");
 
-    float _RevealTime;
+    [SerializeField]
+    private Material material;
+    private float revealTime;
 
     private void Update()
     {
-        if (material!=null && _RevealTime!=null)
+        if (this.material)
         {
-            material.SetFloat("_RevealTime", Time.time - _RevealTime);
+            this.material.SetFloat(RevealTime, Time.time - this.revealTime);
         }
     }
 
     public void RevealClicked()
     {
-        _RevealTime = Time.time;
+        this.revealTime = Time.time;
     }
 }

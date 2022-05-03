@@ -1,93 +1,91 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof (NavMeshAgent))]
-[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(Animator), typeof (NavMeshAgent), typeof(Renderer))]
 public class GirlController : MonoBehaviour
 {
-    public Material material;
+    private static readonly int Position = Shader.PropertyToID("_Position");
+    private static readonly int Speed    = Animator.StringToHash("speed");
 
-    Animator anim; 
-    Camera cam;
-    NavMeshAgent agent;
-    Vector2 smoothDeltaPosition = Vector2.zero;
-    Vector2 velocity = Vector2.zero;
+    [SerializeField]
+    private Material material;
+    private Animator anim;
+    private Camera cam;
+    private NavMeshAgent agent;
+    private Vector2 smoothDeltaPosition;
+    private Vector2 velocity;
 
-    void Start()
+    private void Start()
     {
-        anim = GetComponent<Animator>();
-        agent = GetComponent<NavMeshAgent>();
-        cam = Camera.main;
+        this.anim     = GetComponent<Animator>();
+        this.agent    = GetComponent<NavMeshAgent>();
+        this.cam      = Camera.main;
         // Don’t update position automatically
-        agent.updatePosition = false;
+        this.agent.updatePosition = false;
 
         FindAndSelectMaterial();
     }
 
-    void FindAndSelectMaterial() {
+    private void FindAndSelectMaterial()
+    {
         GameObject go = GameObject.Find("Plane");
-        if (go)
-        {
-            Renderer renderer = go.GetComponent<Renderer>();
-            material = renderer.material;
+        if (!go) return;
 
-            if (material)
-            {
-                Vector4 pos = new Vector4(transform.position.x, transform.position.y, transform.position.z, Time.time);
-                material.SetVector("_Position", pos);
-            }
-        }
+        this.material = GetComponent<Renderer>().material;
+        if (!this.material) return;
+
+        Vector3 position = this.transform.position;
+        Vector4 pos      = new(position.x, position.y, position.z, Time.time);
+        this.material.SetVector(Position, pos);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray, out RaycastHit hit)){
-                agent.destination = hit.point;
-                if (material)
+            Ray ray = this.cam.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                this.agent.destination = hit.point;
+                if (this.material)
                 {
-                    Vector4 pos = new Vector4(hit.point.x, hit.point.y, hit.point.z, Time.time);
-                    material.SetVector("_Position", pos);
+                    Vector4 pos = new (hit.point.x, hit.point.y, hit.point.z, Time.time);
+                    this.material.SetVector(Position, pos);
                 }
             }
         }
 
-        Vector3 worldDeltaPosition = agent.nextPosition - transform.position;
+        // ReSharper disable once LocalVariableHidesMember
+        Transform transform = this.transform;
+        Vector3 worldDeltaPosition = this.agent.nextPosition - transform.position;
 
         // Map 'worldDeltaPosition' to local space
-        float dx = Vector3.Dot(transform.right, worldDeltaPosition);
+        float dx = Vector3.Dot(transform.right,   worldDeltaPosition);
         float dy = Vector3.Dot(transform.forward, worldDeltaPosition);
-        Vector2 deltaPosition = new Vector2(dx, dy);
+        Vector2 deltaPosition = new(dx, dy);
 
         // Low-pass filter the deltaMove
-        float smooth = Mathf.Min(1.0f, Time.deltaTime / 0.15f);
-        smoothDeltaPosition = Vector2.Lerp(smoothDeltaPosition, deltaPosition, smooth);
+        float smooth = Mathf.Min(1f, Time.deltaTime / 0.15f);
+        this.smoothDeltaPosition = Vector2.Lerp(this.smoothDeltaPosition, deltaPosition, smooth);
 
         // Update velocity if time advances
-        if (Time.deltaTime > 1e-5f)
-            velocity = smoothDeltaPosition / Time.deltaTime;
+        if (Time.deltaTime > 1E-5f)
+        {
+            this.velocity = this.smoothDeltaPosition / Time.deltaTime;
+        }
 
-        float speed = velocity.magnitude;
-        bool shouldMove = speed > 0.5f;// && agent.remainingDistance > agent.radius;
+        float speed     = this.velocity.magnitude;
+        bool shouldMove = speed > 0.5f; // && agent.remainingDistance > agent.radius;
 
         // Update animation parameters
-        anim.SetFloat("speed", speed);
+        this.anim.SetFloat(Speed, speed);
 
         //GetComponent<LookAt>().lookAtTargetPosition = agent.steeringTarget + transform.forward;
     }
 
-    void OnAnimatorMove()
+    private void OnAnimatorMove()
     {
         // Update position to agent position
-        transform.position = agent.nextPosition;
+        this.transform.position = this.agent.nextPosition;
     }
 }
-
-
-

@@ -1,40 +1,36 @@
-using System;
 using UnityEngine;
 
 public class SmoothFollowTarget : MonoBehaviour
 {
-    public GameObject target;
-    public float[] limitsX;
-    Vector3 offset;
-    
-
-    bool b;
+    [SerializeField]
+    private GameObject target;
+    [SerializeField]
+    private float[] limitsX;
+    private Vector3 offset;
+    private bool b;
 
     private void LateUpdate()
     {
-        if (target == null)
+        if (!this.target)
         {
-            target = GameObject.FindGameObjectWithTag("Player");
+            this.target = GameObject.FindGameObjectWithTag("Player");
             return;
         }
-        else
-        {
-            if (!b)
-            {
-                offset = transform.position - target.transform.position;
-                b = true;
-            }
 
-            Vector3 pos = target.transform.position + offset;
-            if (limitsX != null && limitsX.Length == 2)
-            {
-                pos.x = Mathf.Clamp(pos.x, limitsX[0], limitsX[1]);
-                //Debug.Log("pos.x clamped to " + pos.x);
-            }
-            transform.position = Vector3.Lerp(transform.position, pos, Time.deltaTime * 5);
-            transform.LookAt(target.transform);
-            return;
+        if (!this.b)
+        {
+            this.offset = this.transform.position - this.target.transform.position;
+            this.b = true;
         }
+
+        Vector3 pos = this.target.transform.position + this.offset;
+        if (this.limitsX is { Length: 2 })
+        {
+            pos.x = Mathf.Clamp(pos.x, this.limitsX[0], this.limitsX[1]);
+            //Debug.Log("pos.x clamped to " + pos.x);
+        }
+
+        this.transform.position = Vector3.Lerp(this.transform.position, pos, Time.deltaTime * 5f);
+        this.transform.LookAt(this.target.transform);
     }
 }
-

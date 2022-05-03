@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SphereBounce : MonoBehaviour
 {
-	float startY;
+    private float startY;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-		startY = transform.position.y;
+        this.startY = this.transform.position.y;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-		Vector3 pos = transform.position;
-		pos.y = startY + (float)(Math.Sin(Time.time*3.0) * 0.2);
-		transform.position = pos;
+        Vector3 pos = this.transform.position;
+        pos.y       = this.startY + (Mathf.Sin(Time.time * 3f) * 0.2f);
+        this.transform.position = pos;
     }
 }

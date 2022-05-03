@@ -1,66 +1,72 @@
 ﻿using UnityEngine;
 
+// ReSharper disable once InconsistentNaming
 [ExecuteInEditMode]
 public class Scene70aRenderImage : MonoBehaviour
 {
-    #region Variables
-    public Shader curShader;
-    public Color scanlineColor = Color.black;
-    public float tint = 1.0f;
-    public int scanlines = 100;
-    private Material screenMat;
-    #endregion
+    private static readonly int Tint = Shader.PropertyToID("_Tint");
+    private static readonly int Scanlines = Shader.PropertyToID("_Scanlines");
+    private static readonly int ScanlineColor = Shader.PropertyToID("_ScanlineColor");
 
-    #region
-    Material ScreenMat
+    [SerializeField]
+    private Shader curShader;
+    [SerializeField]
+    private Color scanlineColor;
+    [SerializeField]
+    private float tint = 1f;
+    [SerializeField]
+    private int scanlines = 100;
+    private Material screenMat;
+
+    private Material ScreenMaterial
     {
         get
         {
-            if (screenMat == null)
+            if (!this.screenMat)
             {
-                screenMat = new Material(curShader);
-                screenMat.hideFlags = HideFlags.HideAndDontSave;
+                this.screenMat = new(this.curShader)
+                {
+                    hideFlags = HideFlags.HideAndDontSave
+                };
             }
 
-            return screenMat;
-        }
-    }
-    #endregion
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        if (!curShader && !curShader.isSupported)
-        {
-            enabled = false;
+            return this.screenMat;
         }
     }
 
-    void OnRenderImage(RenderTexture sourceTexture, RenderTexture destTexture)
+    private void Start()
     {
-        if (curShader != null)
+        if (!this.curShader || !this.curShader.isSupported)
         {
-            ScreenMat.SetFloat("_Tint", tint);
-            ScreenMat.SetFloat("_Scanlines", scanlines);
-            ScreenMat.SetColor("_ScanlineColor", scanlineColor);
-            Graphics.Blit(sourceTexture, destTexture, ScreenMat);
+            this.enabled = false;
+        }
+    }
+
+    private void OnRenderImage(RenderTexture sourceTexture, RenderTexture destTexture)
+    {
+        if (this.curShader)
+        {
+            this.ScreenMaterial.SetFloat(Tint, this.tint);
+            this.ScreenMaterial.SetFloat(Scanlines, this.scanlines);
+            this.ScreenMaterial.SetColor(ScanlineColor, this.scanlineColor);
+            Graphics.Blit(sourceTexture, destTexture, this.ScreenMaterial);
         }
         else
         {
             Graphics.Blit(sourceTexture, destTexture);
         }
     }
-    // Update is called once per frame
-    void Update()
+
+    private void Update()
     {
-        tint = Mathf.Clamp(tint, 0.0f, 1.0f);
+        this.tint = Mathf.Clamp01(this.tint);
     }
 
     private void OnDisable()
     {
-        if (screenMat)
+        if (this.screenMat)
         {
-            DestroyImmediate(screenMat);
+            DestroyImmediate(this.screenMat);
         }
     }
 }

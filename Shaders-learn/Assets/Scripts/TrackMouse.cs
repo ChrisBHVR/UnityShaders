@@ -1,28 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TrackMouse : MonoBehaviour
 {
-    Material material;
-    Vector4 mouse;
-    Camera camera;
+    private static readonly int Mouse = Shader.PropertyToID("_Mouse");
 
-    // Start is called before the first frame update
-    void Start()
+    private Material material;
+    private Vector4 mouse;
+    private new Camera camera;
+
+    private void Start()
     {
         Renderer rend = GetComponent<Renderer>();
-        material = rend.material;
-        mouse = new Vector4();
-        mouse.z = Screen.height;
-        mouse.w = Screen.width;
-        camera = Camera.main;
+        this.material = rend.material;
+        this.mouse    = new(0f, 0f, Screen.height, Screen.width);
+        this.camera   = Camera.main;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
-        material.SetVector("_Mouse", mouse);
+        this.material.SetVector(Mouse, this.mouse);
     }
 }

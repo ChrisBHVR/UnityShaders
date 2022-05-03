@@ -3,53 +3,41 @@
 [ExecuteInEditMode]
 public class Scene69RenderImage : MonoBehaviour
 {
-    #region Variables
-    public Shader curShader;
-    public Color tintColor = Color.white;
+    [SerializeField]
+    private Shader curShader;
+    [SerializeField]
+    private Color tintColor = Color.white;
     private Material screenMat;
-    #endregion
 
-    #region
-    Material ScreenMat
+    private Material ScreenMaterial
     {
         get
         {
-            if (screenMat == null)
+            if (!this.screenMat)
             {
-                screenMat = new Material(curShader);
-                screenMat.hideFlags = HideFlags.HideAndDontSave;
+                this.screenMat = new(this.curShader)
+                {
+                    hideFlags = HideFlags.HideAndDontSave
+                };
             }
 
-            return screenMat;
+            return this.screenMat;
         }
     }
-    #endregion
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        if (!curShader && !curShader.isSupported)
+        if (!this.curShader || !this.curShader.isSupported)
         {
-            enabled = false;
+            this.enabled = false;
         }
-    }
-
-    void OnRenderImage(RenderTexture sourceTexture, RenderTexture destTexture)
-    {
- 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-       
     }
 
     private void OnDisable()
     {
-        if (screenMat)
+        if (this.screenMat)
         {
-            DestroyImmediate(screenMat);
+            DestroyImmediate(this.screenMat);
         }
     }
 }

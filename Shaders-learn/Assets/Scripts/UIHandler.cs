@@ -1,42 +1,49 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class UIHandler : MonoBehaviour
 {
+    private static readonly int TextureA = Shader.PropertyToID("_TextureA");
+    private static readonly int TextureB = Shader.PropertyToID("_TextureB");
+    private static readonly int StartTime = Shader.PropertyToID("_StartTime");
+
+    [SerializeField]
     public GameObject quad;
-    public List<Texture> images;
+    [SerializeField]
+    public Texture[] images;
     private int index;
     private Material material;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        index = 0;
+        this.index = 0;
+        if (!this.quad) return;
 
-        if (quad != null)
-        {
-            material = quad.GetComponent<Renderer>().material;
-            NextClicked();
-        }
+        this.material = this.quad.GetComponent<Renderer>().material;
+        NextClicked();
     }
 
     public void NextClicked()
     {
-        if (material == null) return;
-        index++;
-        if (index >= images.Count) index = 0;
-        if (index == 0)
+        if (!this.material) return;
+
+        this.index++;
+        if (this.index >= this.images.Length)
         {
-            material.SetTexture("_TextureA", images[images.Count - 1]);
-            material.SetTexture("_TextureB", images[index]);
+            this.index = 0;
+        }
+
+        if (this.index == 0)
+        {
+            this.material.SetTexture(TextureA, this.images[^1]);
+            this.material.SetTexture(TextureB, this.images[this.index]);
         }
         else
         {
-            material.SetTexture("_TextureA", images[index-1]);
-            material.SetTexture("_TextureB", images[index]);
+            this.material.SetTexture(TextureA, this.images[this.index - 1]);
+            this.material.SetTexture(TextureB, this.images[this.index]);
         }
-        
-        material.SetFloat("_StartTime", Time.time);
+
+        this.material.SetFloat(StartTime, Time.time);
     }
 }
