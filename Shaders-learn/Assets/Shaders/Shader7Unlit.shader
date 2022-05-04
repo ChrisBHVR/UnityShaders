@@ -27,11 +27,11 @@
 
             v2f vert(appdata_base v)
             {
-                v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.position = v.vertex;
-                o.uv = v.texcoord;
-                return o;
+                v2f output;
+                output.vertex   = UnityObjectToClipPos(v.vertex);
+                output.position = v.vertex;
+                output.uv       = v.texcoord;
+                return output;
             }
 
             fixed4 frag(v2f i) : SV_Target

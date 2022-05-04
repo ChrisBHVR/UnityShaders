@@ -21,16 +21,16 @@
             {
                 float4 vertex:   SV_POSITION;
                 float4 position: TEXCOORD1;
-                float2 uv:      TEXCOORD0;
+                float2 uv:       TEXCOORD0;
             };
 
             v2f vert(appdata_base v)
             {
-                v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.position = v.vertex;
-                o.uv = v.texcoord;
-                return o;
+                v2f output;
+                output.vertex   = UnityObjectToClipPos(v.vertex);
+                output.position = v.vertex;
+                output.uv       = v.texcoord;
+                return output;
             }
 
             float rect(float2 pos, float2 size, float2 center)

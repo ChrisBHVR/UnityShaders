@@ -13,7 +13,7 @@
         Pass
         {
             CGPROGRAM
-            #pragma vertex vert_img
+            #pragma vertex vert
             #pragma fragment frag
 
             #include "UnityCG.cginc"
@@ -24,8 +24,17 @@
             {
                 float4 vertex:   SV_POSITION;
                 float4 position: TEXCOORD1;
-                float2 uv:      TEXCOORD0;
+                float2 uv:       TEXCOORD0;
             };
+
+            v2f vert(appdata_base v)
+            {
+                v2f output;
+                output.vertex   = UnityObjectToClipPos(v.vertex);
+                output.position = v.vertex;
+                output.uv       = v.texcoord;
+                return output;
+            }
 
             float rect(float2 pos, float2 size, float2 center)
             {
@@ -35,7 +44,7 @@
                 return test.x * test.y;
             }
 
-            fixed4 frag(v2f_img i) : SV_Target
+            fixed4 frag(v2f i) : SV_Target
             {
                 float inRect = rect(i.uv, 0.1, _Mouse.xy);
                 fixed3 colour = fixed3(1, 1, 0) * inRect;
