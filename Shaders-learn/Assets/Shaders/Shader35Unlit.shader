@@ -2,13 +2,16 @@
 {
     Properties
     {
-        _MainTex("Main Texture", 2D) = "white" {}
+        _MainTex("Main Texture", 2D) = "white" { }
     }
+
     SubShader
     {
-        Tags { "RenderType"="Transparent" }
-        Tags { "Queue" = "Transparent" }
-
+        Tags
+        {
+            "RenderType"="Transparent"
+            "Queue" = "Transparent"
+        }
         LOD 100
 
         Pass

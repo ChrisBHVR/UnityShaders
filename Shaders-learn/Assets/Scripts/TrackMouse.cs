@@ -9,6 +9,7 @@ namespace ShadersLearn
 
         private Material material;
         private new Camera camera;
+
         private Vector2 mousePosition;
         private Vector2 MousePosition
         {
