@@ -5,6 +5,7 @@
         _Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
     }
+
     SubShader
     {
         Tags { "RenderType"="Opaque" }
@@ -19,7 +20,7 @@
         {
             float2 uv_MainTex;
         };
-        
+
         fixed4 _Color;
 
         void surf (Input IN, inout SurfaceOutput o)

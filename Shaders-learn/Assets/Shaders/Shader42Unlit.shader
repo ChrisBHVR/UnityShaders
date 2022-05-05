@@ -7,7 +7,7 @@
     SubShader
     {
         Tags { "RenderType"="Opaque" }
-     
+
         LOD 100
 
         Pass
@@ -22,7 +22,7 @@
             {
                 float4 vertex : SV_POSITION;
             };
-            
+
             float _Radius;
             float _Delta;
 
@@ -31,7 +31,7 @@
                 v2f o;
 
                 float delta = 0;
-                
+
                 float4 s = float4(normalize(v.vertex.xyz)*_Radius*0.01, v.vertex.w);
                 float4 pos = lerp(v.vertex, s, delta);
 
@@ -39,7 +39,7 @@
 
                 return o;
             }
-             
+
             float4 frag (v2f i) : COLOR
             {
                 return fixed4( 1,1,1,1 );

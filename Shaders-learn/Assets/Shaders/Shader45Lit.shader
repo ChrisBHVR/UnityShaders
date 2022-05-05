@@ -7,7 +7,7 @@
     SubShader
     {
         Tags { "RenderType"="Opaque" }
-     
+
         LOD 100
 
         Pass
@@ -24,7 +24,7 @@
                 float4 vertex : SV_POSITION;
                 fixed4 diff : COLOR0; // diffuse lighting color
             };
-            
+
             float _Radius;
             float _Delta;
 
@@ -33,7 +33,7 @@
                 v2f o;
 
                 float delta = (_SinTime.w + 1.0)/2.0;
-                
+
                 float3 normal = normalize(v.vertex.xyz);
                 float4 s = float4(normal * _Radius * 0.01, v.vertex.w);
                 float4 pos = lerp(v.vertex, s, delta);
@@ -43,7 +43,7 @@
 
                 return o;
             }
-             
+
             float4 frag (v2f i) : COLOR
             {
                 fixed4 color = 1;

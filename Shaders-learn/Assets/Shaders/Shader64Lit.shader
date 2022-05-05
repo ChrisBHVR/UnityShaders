@@ -11,6 +11,7 @@
         _RimPower ("Rim Power", Range(0.5,8.0)) = 3.0
         _RevealTime("Reveal Time", Float) = 2.0
     }
+
     SubShader
     {
         Tags { "RenderType"="Opaque" }

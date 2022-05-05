@@ -7,7 +7,7 @@
     SubShader
     {
         Tags { "RenderType"="Opaque" }
-        
+
         LOD 100
 
         Pass
@@ -26,11 +26,11 @@
             };
 
             float _Scale;
-            
+
             v2f vert (appdata_base v)
             {
                 v2f o;
-                
+
                 o.noise = 0;
                 o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv = v.texcoord;

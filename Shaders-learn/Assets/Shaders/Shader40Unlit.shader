@@ -8,7 +8,7 @@
     SubShader
     {
         Tags { "RenderType"="Opaque" }
-     
+
         LOD 100
 
         Pass
@@ -25,7 +25,7 @@
                 float2 uv: TEXCOORD0;
                 float4 position: TEXCOORD1;
             };
-            
+
             v2f vert (appdata_base v)
             {
                 v2f o;
@@ -37,7 +37,7 @@
 
             sampler2D _MainTex;
             float _Duration;
-            
+
 
             float4 frag (v2f i) : COLOR
             {

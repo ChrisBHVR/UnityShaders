@@ -27,7 +27,7 @@
             fixed4 frag (v2f_img i) : SV_Target
             {
                 fixed3 renderTex = tex2D(_MainTex, i.uv).rgb;
-    
+
                 return fixed4(renderTex, 1);
 
             }

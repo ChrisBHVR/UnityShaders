@@ -6,7 +6,7 @@
     SubShader
     {
         Tags { "RenderType"="Opaque" }
-     
+
         LOD 100
 
         Pass
@@ -23,7 +23,7 @@
                 float4 vertex : SV_POSITION;
                 float4 position: TEXCOORD1;
             };
-            
+
             v2f vert (appdata_base v)
             {
                 v2f o;
@@ -42,14 +42,17 @@
 
                 p *= scale;
 
-                if (marble){
-                    float d = perlin(p.x, p.y) * scale; 
+                if (marble)
+                {
+                    float d = perlin(p.x, p.y) * scale;
                     float u = p.x + d;
                     float v = p.y + d;
                     d = perlin(u, v) * scale;
                     noise = perlin(p.x + d, p.y + d);
                     color = fixed3(0.6 * (fixed3(2,2,2) * noise - fixed3(noise * 0.1, noise * 0.2 - sin(u / 30.0) * 0.1, noise * 0.3 + sin(v / 40.0) * 0.2)));
-                }else{
+                }
+                else
+                {
                     noise = perlin(p.x, p.y);
                     color = fixed3(1,1,1) * noise;
                 }

@@ -7,6 +7,7 @@
         _ScanLines("Scanlines", Range(50, 150)) = 100
         _ScanlineColor("Scanline Color", Color) = (0,0,0,1)
     }
+
     SubShader
     {
         Tags { "RenderType"="Opaque" }
@@ -33,11 +34,11 @@
                 fixed3 grayScale = (renderTex.r + renderTex.g + renderTex.b) / 3;
                 fixed3 tinted = grayScale * tintColor;
                 fixed3 finalColor = lerp(renderTex, tinted, _Tint);
-                
+
                 float scanline = smoothstep(0.2, 0.4, frac(i.uv.y * _Scanlines));
                 finalColor = lerp(_ScanlineColor.rgb, finalColor, scanline);
-            
-                
+
+
                 return fixed4(finalColor, 1);
 
             }

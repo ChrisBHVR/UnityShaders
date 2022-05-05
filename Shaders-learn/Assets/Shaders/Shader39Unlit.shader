@@ -7,7 +7,7 @@
     SubShader
     {
         Tags { "RenderType"="Opaque" }
-     
+
         LOD 100
 
         Pass
@@ -24,7 +24,7 @@
                 float2 uv: TEXCOORD0;
                 float4 position: TEXCOORD1;
             };
-            
+
             v2f vert (appdata_base v)
             {
                 v2f o;
@@ -36,7 +36,8 @@
 
             sampler2D _MainTex;
 
-            float2 rotate(float2 pt, float aspect, float theta){
+            float2 rotate(float2 pt, float aspect, float theta)
+            {
                 float c = cos(theta);
                 float s = sin(theta);
                 float2x2 mat = float2x2(c,s,-s,c);
@@ -55,9 +56,12 @@
                 uv = rotate(uv, aspect, _Time.y);
                 uv += center;
                 fixed3 color;
-                if (uv.x<0.0||uv.x>1.0||uv.y<0.0||uv.y>1.0){
+                if (uv.x<0.0||uv.x>1.0||uv.y<0.0||uv.y>1.0)
+                {
                     color = fixed3(0,0,0);
-                }else{
+                }
+                else
+                {
                     color = tex2D(_MainTex, uv).rgb;
                 }
 

@@ -4,6 +4,7 @@
     {
         _MainTex ("Texture", 2D) = "white" {}
     }
+
     SubShader
     {
         Pass
@@ -47,7 +48,8 @@
 
             sampler2D _MainTex;
 
-            float circle(float2 pt, float2 center, float radius, float line_width, float edge_thickness){
+            float circle(float2 pt, float2 center, float radius, float line_width, float edge_thickness)
+            {
                 float2 p = pt - center;
                 float len = length(p);
                 float half_line_width = line_width/2.0;

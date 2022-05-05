@@ -16,7 +16,8 @@
 
             #include "UnityCG.cginc"
 
-            float random (float2 pt) {
+            float random (float2 pt)
+            {
                 const float a = 12.9898;
                 const float b = 78.233;
                 const float c = 43758.543123;
@@ -25,7 +26,8 @@
 
             // 2D Noise based on Morgan McGuire @morgan3d
             // https://www.shadertoy.com/view/4dS3Wd
-            float noise (float2 st) {
+            float noise (float2 st)
+            {
                 float2 i = floor(st);
                 float2 f = frac(st);
 
@@ -54,10 +56,10 @@
                 pos.y -= _Time.y;
 
                 // Use the noise function
-                float n = noise(pos); 
+                float n = noise(pos);
                 //n = smoothstep(0.4, 0.6, n);
                 fixed3 color = n * fixed3(1,1,1);
-                
+
                 return fixed4(color, 1.0);
             }
             ENDCG

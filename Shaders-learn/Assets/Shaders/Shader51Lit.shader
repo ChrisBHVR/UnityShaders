@@ -1,6 +1,7 @@
 ﻿Shader "NiksShaders/Shader51Lit"
 {
-    Properties {
+    Properties
+    {
         _MainTex ("Texture", 2D) = "white" {}
     }
 
@@ -12,13 +13,15 @@
         CGPROGRAM
         #pragma surface surf Lambert
 
-        struct Input {
+        struct Input
+        {
             float2 uv_MainTex;
         };
 
         sampler2D _MainTex;
 
-        void surf (Input IN, inout SurfaceOutput o) {
+        void surf (Input IN, inout SurfaceOutput o)
+        {
             o.Albedo = 1;
         }
         ENDCG

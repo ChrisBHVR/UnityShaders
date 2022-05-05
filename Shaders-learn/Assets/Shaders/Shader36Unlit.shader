@@ -12,7 +12,7 @@
     SubShader
     {
         Tags { "RenderType"="Opaque" }
-     
+
         LOD 100
 
         Pass
@@ -22,13 +22,13 @@
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            
+
             struct v2f
             {
                 float4 vertex : SV_POSITION;
                 float4 position: TEXCOORD1;
             };
-            
+
             v2f vert (appdata_base v)
             {
                 v2f o;

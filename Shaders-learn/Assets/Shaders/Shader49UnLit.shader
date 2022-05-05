@@ -31,7 +31,8 @@
             float _Scale;
             sampler2D _MainTex;
 
-            float random( float3 pt, float seed ){
+            float random( float3 pt, float seed )
+            {
                 float3 scale = float3( 12.9898, 78.233, 151.7182 );
                 return frac( sin( dot( pt + seed, scale ) ) * 43758.5453 + seed ) ;
             }
