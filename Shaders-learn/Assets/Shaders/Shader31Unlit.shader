@@ -22,7 +22,7 @@
             fixed4 _ColourA;
             fixed4 _ColourB;
 
-            float random (float2 pos)
+            float random(float2 pos)
             {
                 const float a = 12.9898;
                 const float b = 78.233;
@@ -32,7 +32,7 @@
 
             // 2D Noise based on Morgan McGuire @morgan3d
             // https://www.shadertoy.com/view/4dS3Wd
-            float noise (float2 st)
+            float noise(float2 st)
             {
                 float2 i = floor(st);
                 float2 f = frac(st);
@@ -55,7 +55,7 @@
                      + ((d - b) * u.x * u.y);
             }
 
-            fixed4 frag (v2f_img i) : SV_Target
+            fixed4 frag(v2f_img i) : SV_Target
             {
                 float2 n = 0;
                 float2 pos;

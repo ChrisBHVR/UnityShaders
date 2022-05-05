@@ -2,12 +2,12 @@
 {
     Properties
     {
-        _Scale("Scale", Range(0.1, 3)) = 1
+        _Scale("Scale", Range(0.1, 3)) = 0.3
     }
+
     SubShader
     {
         Tags { "RenderType"="Opaque" }
-
         LOD 100
 
         Pass
@@ -17,36 +17,35 @@
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-
-            struct v2f
-            {
-                float4 pos : SV_POSITION;
-                float2 uv: TEXCOORD0;
-                float4 noise: TEXCOORD1;
-            };
+            #include "noiseSimplex.cginc"
 
             float _Scale;
 
-            v2f vert (appdata_base v)
+            struct v2f
             {
-                v2f o;
+                float4 pos:   SV_POSITION;
+                float2 uv:    TEXCOORD0;
+                float4 noise: TEXCOORD1;
+            };
 
-                o.noise = 0;
-                o.pos = UnityObjectToClipPos(v.vertex);
-                o.uv = v.texcoord;
-
-                return o;
+            v2f vert(appdata_base v)
+            {
+                v2f output;
+                output.noise       = float4(-turbulence(v.normal / 2), 0, 0, 0);
+                output.pos = UnityObjectToClipPos(v.vertex);
+                output.uv  = v.texcoord;
+                return output;
             }
 
             fixed4 frag(v2f i) : SV_Target
             {
-                fixed3 color = fixed3( i.uv * ( 1. - 2. * i.noise.x ), 0.0 );
-
-                return fixed4( color, 1 );
+                fixed3 colour = fixed3(i.uv * (1 - (2 * i.noise.x)), 0);
+                return fixed4(colour, 1);
             }
             ENDCG
         }
     }
+
     Fallback "Diffuse"
 }
 

@@ -31,7 +31,7 @@
                 float4 screenPos: TEXCOORD2;
             };
 
-            v2f vert (appdata_base v)
+            v2f vert(appdata_base v)
             {
                 v2f output;
                 output.vertex   = UnityObjectToClipPos(v.vertex);
@@ -60,7 +60,7 @@
                 return 1 - smoothstep(radius, radius + edge, dist);
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            fixed4 frag(v2f i) : SV_Target
             {
                 float2 pos = i.screenPos.xy * _ScreenParams.xy;
                 float2 center = _ScreenParams.xy / 2;

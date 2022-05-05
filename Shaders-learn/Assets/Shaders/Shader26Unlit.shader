@@ -44,7 +44,7 @@
                 return saturate(result);
             }
 
-            fixed4 frag (v2f_img i) : SV_Target
+            fixed4 frag(v2f_img i) : SV_Target
             {
                 fixed3 colour = lerp(_BrickColour.rgb, _MortarColour.rgb, brick(frac(i.uv * _TileCount), 0.05, 0.2));
                 return fixed4(colour, 1);

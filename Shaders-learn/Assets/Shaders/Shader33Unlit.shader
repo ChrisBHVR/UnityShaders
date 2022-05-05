@@ -20,7 +20,7 @@
 
             sampler2D _MainTex;
 
-            fixed4 frag (v2f_img i) : SV_Target
+            fixed4 frag(v2f_img i) : SV_Target
             {
                 fixed4 col;
                 fixed3 colour;

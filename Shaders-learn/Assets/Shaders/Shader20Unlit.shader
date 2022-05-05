@@ -29,7 +29,7 @@
                 float2 uv:       TEXCOORD0;
             };
 
-            v2f vert (appdata_base v)
+            v2f vert(appdata_base v)
             {
                 v2f output;
                 output.vertex   = UnityObjectToClipPos(v.vertex);
@@ -66,7 +66,7 @@
                 return smoothstep(x - halfLineWidth - edge, x - halfLineWidth, y) - smoothstep(x + halfLineWidth, x + halfLineWidth + edge, y);
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            fixed4 frag(v2f i) : SV_Target
             {
                 float2 center = 0.5;
                 fixed3 colour = onLine(i.uv.y, 0.5, 0.002, 0.5) * _AxisColour;

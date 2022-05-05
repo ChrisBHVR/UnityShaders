@@ -28,7 +28,7 @@
                 float4 position: TEXCOORD1;
             };
 
-            v2f vert (appdata_base v)
+            v2f vert(appdata_base v)
             {
                 v2f output;
                 output.vertex   = UnityObjectToClipPos(v.vertex);
@@ -37,7 +37,7 @@
                 return output;
             }
 
-            float4 frag (v2f i) : COLOR
+            float4 frag(v2f i) : COLOR
             {
                 float2 pos = i.position.xy * 2;
                 float len = length(pos);

@@ -27,7 +27,7 @@
 
             // 2D Noise based on Morgan McGuire @morgan3d
             // https://www.shadertoy.com/view/4dS3Wd
-            float noise (float2 st)
+            float noise(float2 st)
             {
                 float2 i = floor(st);
                 float2 f = frac(st);
@@ -50,7 +50,7 @@
                      + ((d - b) * u.x * u.y);
             }
 
-            fixed4 frag (v2f_img i) : SV_Target
+            fixed4 frag(v2f_img i) : SV_Target
             {
                 // Scale the coordinate system to see some noise in action
                 float2 pos = i.uv * 8;

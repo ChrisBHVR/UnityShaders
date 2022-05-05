@@ -42,7 +42,7 @@
                 return result;
             }
 
-            fixed4 frag (v2f_img i) : SV_Target
+            fixed4 frag(v2f_img i) : SV_Target
             {
                 fixed3 colour = brick(frac(i.uv * _TileCount), 0.05, 0.2) * fixed3(1, 1, 1);
                 return fixed4(colour, 1);

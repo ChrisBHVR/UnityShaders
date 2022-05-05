@@ -25,7 +25,7 @@
                 float2 uv:        TEXCOORD0;
             };
 
-            v2f vert (appdata_base v)
+            v2f vert(appdata_base v)
             {
                 v2f output;
                 output.vertex = UnityObjectToClipPos(v.vertex);
@@ -35,7 +35,7 @@
                 return output;
             }
 
-            float random (float2 pos)
+            float random(float2 pos)
             {
                 const float a = 12.9898;
                 const float b = 78.233;
@@ -43,7 +43,7 @@
                 return frac(sin(dot(pos, float2(a, b))) * c );
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            fixed4 frag(v2f i) : SV_Target
             {
                 fixed3 colour = random(i.uv) * fixed3(1, 1, 1);
                 return fixed4(colour, 1);

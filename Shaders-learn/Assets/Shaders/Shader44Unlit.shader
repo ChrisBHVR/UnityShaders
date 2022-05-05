@@ -2,12 +2,12 @@
 {
     Properties
     {
-        _Radius("Radius", Float) = 1.0
+        _Radius("Radius", Float) = 1
     }
+
     SubShader
     {
         Tags { "RenderType"="Opaque" }
-
         LOD 100
 
         Pass
@@ -18,31 +18,26 @@
 
             #include "UnityCG.cginc"
 
+            float _Radius;
+
             struct v2f
             {
-                float4 vertex : SV_POSITION;
+                float4 vertex: SV_POSITION;
             };
 
-            float _Radius;
-            float _Delta;
-
-            v2f vert (appdata_base v)
+            v2f vert(appdata_base v)
             {
-                v2f o;
-
-                float delta = (_SinTime.w + 1.0)/2.0;
-
-                float4 s = float4(normalize(v.vertex.xyz)*_Radius*0.01, v.vertex.w);
-                float4 pos = lerp(v.vertex, s, delta);
-
-                o.vertex = UnityObjectToClipPos(pos);
-
-                return o;
+                v2f output;
+                float delta      = (_CosTime.w + 1) / 2;
+                float4 spherical = float4(normalize(v.vertex.xyz) * _Radius * 0.01, v.vertex.w);
+                float4 pos       = lerp(spherical, v.vertex, delta);
+                output.vertex    = UnityObjectToClipPos(pos);
+                return output;
             }
 
-            float4 frag (v2f i) : COLOR
+            float4 frag(v2f i) : COLOR
             {
-                return fixed4( 1,1,1,1 );
+                return fixed4(1, 1, 1, 1);
             }
             ENDCG
         }
