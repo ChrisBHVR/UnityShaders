@@ -4,6 +4,7 @@
     {
         _MainTex ("Texture", 2D) = "white" {}
     }
+
     SubShader
     {
         Pass

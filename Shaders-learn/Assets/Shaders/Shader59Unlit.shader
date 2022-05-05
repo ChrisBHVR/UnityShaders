@@ -5,6 +5,7 @@
         _MainTex("Base (RGB)", 2D) = "white" {}
         _Luminosity("Luminosity", Range(0, 1)) = 1.0
     }
+
     SubShader
     {
         Tags { "RenderType"="Opaque" }
