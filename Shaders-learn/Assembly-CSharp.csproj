@@ -113,13 +113,11 @@
     <None Include="Assets\Shaders\Shader11Unlit.shader" />
     <None Include="Assets\Shaders\Shader2Unlit.shader" />
     <None Include="Assets\Shaders\Shader29Unlit.shader" />
-    <None Include="Assets\Shaders\dev.txt" />
     <None Include="Assets\Shaders\Shader45Lit.shader" />
     <None Include="Assets\Shaders\Shader70Unlit.shader" />
     <None Include="Assets\Shaders\Shader44Unlit.shader" />
     <None Include="Assets\Shaders\Shader51Lit.shader" />
     <None Include="Assets\Shaders\Shader21Unlit.shader" />
-    <None Include="Assets\Shaders\noiseSimplex.cginc" />
     <None Include="Assets\Shaders\Shader47UnLit.shader" />
     <None Include="Assets\Shaders\Shader67Unlit.shader" />
     <None Include="Assets\Shaders\Shader49UnLit.shader" />
