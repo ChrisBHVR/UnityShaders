@@ -2,9 +2,10 @@
 {
     Properties
     {
-        _AxisColor("Axis Color", Color) = (0.8, 0.8, 0.8, 1)
-        _SweepColor("Sweep Color", Color) = (0.1, 0.3, 1, 1)
+        _AxisColour("Axis Colour", Color)   = (0.8, 0.8, 0.8, 1)
+        _SweepColour("Sweep Colour", Color) = (0.1, 0.3, 1, 1)
     }
+
     SubShader
     {
         Tags { "RenderType"="Opaque" }
@@ -13,71 +14,56 @@
         Pass
         {
             CGPROGRAM
-// Upgrade NOTE: excluded shader from DX11; has structs without semantics (struct v2f members position)
-#pragma exclude_renderers d3d11
             #pragma vertex vert
             #pragma fragment frag
-        
+
             #include "UnityCG.cginc"
+
+            fixed4 _AxisColour;
+            fixed4 _SweepColour;
 
             struct v2f
             {
-                float4 vertex : SV_POSITION;
+                float4 vertex:   SV_POSITION;
                 float4 position: TEXCOORD1;
-                float2 uv: TEXCOORD0;
+                float2 uv:       TEXCOORD0;
             };
-            
+
             v2f vert (appdata_base v)
             {
-                v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.position = v.vertex;
-                o.uv = v.texcoord;
-                return o;
-            }
-            
-            float getDelta(float x){
-                return (sin(x)+1.0)/2.0;
+                v2f output;
+                output.vertex   = UnityObjectToClipPos(v.vertex);
+                output.position = v.vertex;
+                output.uv       = v.texcoord;
+                return output;
             }
 
-            float sweep(float2 pt, float2 center, float radius, float line_width, float edge_thickness){
-                float2 d = pt - center;
-                float theta = _Time.z;
-                float2 p = float2(cos(theta), -sin(theta))*radius;
-                float h = clamp( dot(d,p)/dot(p,p), 0.0, 1.0 );
-                //float h = dot(d,p)/dot(p,p);
-                float l = length(d - p*h);
-
-                return 1.0 - smoothstep(line_width, line_width+edge_thickness, l);
+            float circle(float2 pos, float2 center, float radius, float lineWidth, float smoothing)
+            {
+                float len = length(pos - center);
+                float halfLineWidth = lineWidth / 2;
+                float edge = halfLineWidth * smoothing;
+                return smoothstep(radius - halfLineWidth - edge, radius - halfLineWidth,        len)
+                     - smoothstep(radius + halfLineWidth,        radius + halfLineWidth + edge, len);
             }
 
-            float circle(float2 pt, float2 center, float radius, float line_width, float edge_thickness){
-                pt -= center;
-                float len = length(pt);
-                //Change true to false to soften the edge
-                float result = smoothstep(radius-line_width/2.0-edge_thickness, radius-line_width/2.0, len) - smoothstep(radius + line_width/2.0, radius + line_width/2.0 + edge_thickness, len);
-
-                return result;
+            float onLine(float x, float y, float lineWidth, float smoothing)
+            {
+                float halfLineWidth = lineWidth / 2;
+                float edge = halfLineWidth * smoothing;
+                return smoothstep(x - halfLineWidth - edge, x - halfLineWidth, y) - smoothstep(x + halfLineWidth, x + halfLineWidth + edge, y);
             }
-
-            float onLine(float x, float y, float line_width, float edge_width){
-                return smoothstep(x-line_width/2.0-edge_width, x-line_width/2.0, y) - smoothstep(x+line_width/2.0, x+line_width/2.0+edge_width, y);
-            }
-            
-            fixed4 _AxisColor;
-            fixed4 _SweepColor;
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed3 color = onLine(i.uv.y, 0.5, 0.002, 0.001) * _AxisColor;//xAxis
-                color += onLine(i.uv.x, 0.5, 0.002, 0.001) * _AxisColor;//yAxis
-
                 float2 center = 0.5;
-                color += circle(i.uv, center, 0.3, 0.002, 0.001) * _AxisColor;
-                color += circle(i.uv, center, 0.2, 0.002, 0.001) * _AxisColor;
-                color += circle(i.uv, center, 0.1, 0.002, 0.001) * _AxisColor;
-                
-                return fixed4(color, 1.0);
+                fixed3 colour = onLine(i.uv.y, 0.5, 0.002, 0.5) * _AxisColour;
+                colour       += onLine(i.uv.x, 0.5, 0.002, 0.5) * _AxisColour;
+
+                colour       += circle(i.uv, center, 0.3, 0.002, 0.5) * _AxisColour;
+                colour       += circle(i.uv, center, 0.2, 0.002, 0.5) * _AxisColour;
+                colour       += circle(i.uv, center, 0.1, 0.002, 0.5) * _AxisColour;
+                return fixed4(colour, 1);
             }
             ENDCG
         }

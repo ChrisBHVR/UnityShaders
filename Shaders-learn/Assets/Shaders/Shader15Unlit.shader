@@ -2,10 +2,11 @@
 {
     Properties
     {
-        _Color("Color", Color) = (1.0,1.0,0,1.0)
-        _Radius("Radius", Float) = 0.3
+        _Colour("Colour", Color)          = (1, 1, 0, 1)
+        _Radius("Radius", Float)        = 0.3
         _LineWidth("Line Width", Float) = 0.01
     }
+
     SubShader
     {
         Tags { "RenderType"="Opaque" }
@@ -14,56 +15,52 @@
         Pass
         {
             CGPROGRAM
-// Upgrade NOTE: excluded shader from DX11; has structs without semantics (struct v2f members position)
-#pragma exclude_renderers d3d11
             #pragma vertex vert
             #pragma fragment frag
 
             #include "UnityCG.cginc"
 
-            struct v2f
-            {
-                float4 vertex : SV_POSITION;
-                float4 position : TEXCOORD1;
-                float2 uv: TEXCOORD0;
-            };
-            
-            v2f vert (appdata_base v)
-            {
-                v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.position = v.vertex;
-                o.uv = v.texcoord;
-                return o;
-            }
-           
-            fixed4 _Color;
+            fixed4 _Colour;
             float _Radius;
             float _LineWidth;
-            
-            float circle(float2 pt, float2 center, float radius, float edge_thickness){
-                float2 p = pt - center;
-                float len = length(p);
-                float result = 1.0-smoothstep(radius-edge_thickness, radius, len);
 
-                return result;
-            }
-
-            float circle(float2 pt, float2 center, float radius, float line_width, float edge_thickness){
-                float2 p = pt - center;
-                float len = length(p);
-                float half_line_width = line_width/2.0;
-                float result = smoothstep(radius-half_line_width-edge_thickness, radius-half_line_width, len) - smoothstep(radius + half_line_width, radius + half_line_width + edge_thickness, len);
-
-                return result;
-            }
-            
-            fixed4 frag (v2f i) : SV_Target
+            struct v2f
             {
-                float2 pos = i.position * 2;
-                fixed3 color = _Color * circle(pos, float2(0,0), _Radius, _LineWidth, 0.002);
-                
-                return fixed4(color, 1.0);
+                float4 vertex:   SV_POSITION;
+                float4 position: TEXCOORD1;
+                float2 uv:       TEXCOORD0;
+            };
+
+            v2f vert(appdata_base v)
+            {
+                v2f output;
+                output.vertex   = UnityObjectToClipPos(v.vertex);
+                output.position = v.vertex;
+                output.uv       = v.texcoord;
+                return output;
+            }
+
+            float2 circleOutline(float2 pos, float2 center, float radius, float lineWidth)
+            {
+                float len = length(pos - center);
+                float halfLine = lineWidth / 2;
+                return step(radius - halfLine, len) - step(radius + halfLine, len);
+            }
+
+            float2 circleOutline(float2 pos, float2 center, float radius, float lineWidth, float smoothing)
+            {
+                float len = length(pos - center);
+                float halfLine = lineWidth / 2;
+                float edge = radius * smoothing;
+                return smoothstep(radius - halfLine - edge, radius - halfLine,        len)
+                     - smoothstep(radius + halfLine,        radius + halfLine + edge, len);
+            }
+
+            fixed4 frag(v2f i) : SV_Target
+            {
+                float inCircle = circleOutline(i.position * 2, 0, _Radius, _LineWidth, 0.015);
+                fixed3 colour = _Colour * inCircle;
+                return fixed4(colour, 1);
             }
             ENDCG
         }

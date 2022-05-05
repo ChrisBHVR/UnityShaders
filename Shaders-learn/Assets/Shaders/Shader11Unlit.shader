@@ -2,9 +2,10 @@
 {
     Properties
     {
-        _Colour("Colour", Color) = (1, 1, 0, 1)
-        _Radius("Radius", Float) = 0.5
-        _Size("Size", Float)     = 0.3
+        _Colour("Colour", Color)  = (1, 1, 0, 1)
+        _Radius("Radius", Float)  = 0.5
+        _Size("Size", Float)      = 0.3
+        _Anchor("Anchor", Vector) = (0.15, 0.15, 0, 0)
     }
 
     SubShader
@@ -23,6 +24,7 @@
             fixed4 _Colour;
             float _Radius;
             float _Size;
+            float4 _Anchor;
 
             struct v2f
             {
@@ -40,11 +42,11 @@
                 return output;
             }
 
-            float rect(float2 pos, float2 size, float2 center)
+            float rect(float2 pos, float2 size, float2 center, float2 anchor)
             {
                 pos -= center;
                 size /= 2;
-                float2 test = step(-size, pos) - step(size, pos);
+                float2 test = step(-size - anchor, pos) - step(size - anchor, pos);
                 return test.x * test.y;
             }
 
@@ -55,11 +57,19 @@
                 return float2x2(c, -s, s, c);
             }
 
+            float2x2 getScaleMatrix(float scale)
+            {
+                return float2x2(scale, 0, 0, scale);
+            }
+
             fixed4 frag(v2f i) : SV_Target
             {
-                float2x2 mat  = getRotationMatrix(_Time.y);
+                float2x2 rotationMatrix  = getRotationMatrix(_Time.y);
+                float2x2 scaleMatrix     = getScaleMatrix(((sin(_Time.y) + 1) / 3) + 0.5);
+                float2x2 mat  = mul(rotationMatrix, scaleMatrix);
                 float2 center = float2(cos(_Time.y), sin(_Time.y)) * _Radius;
-                float inRect  = rect(mul(mat, i.position.xy - center) + center, _Size, center);
+                float2 pos    = mul(mat, i.position.xy - center) + center;
+                float inRect  = rect(pos, _Size, center, _Anchor.xy);
                 fixed3 colour = _Colour * inRect;
                 return fixed4(colour, 1);
             }

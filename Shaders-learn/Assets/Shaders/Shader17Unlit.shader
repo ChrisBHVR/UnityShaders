@@ -2,9 +2,10 @@
 {
     Properties
     {
-        _Color("Color", Color) = (1.0,1.0,1.0,1.0)
+        _Colour("Color", Color)         = (1, 1, 1, 1)
         _LineWidth("Line Width", Float) = 0.02
     }
+
     SubShader
     {
         Tags { "RenderType"="Opaque" }
@@ -13,46 +14,48 @@
         Pass
         {
             CGPROGRAM
-// Upgrade NOTE: excluded shader from DX11; has structs without semantics (struct v2f members position)
-#pragma exclude_renderers d3d11
             #pragma vertex vert
             #pragma fragment frag
 
             #include "UnityCG.cginc"
 
+            fixed4 _Colour;
+            float _LineWidth;
+
             struct v2f
             {
-                float4 vertex : SV_POSITION;
-                float4 position: TEXCOORD1;
-                float2 uv: TEXCOORD0;
+                float4 vertex :   SV_POSITION;
+                float2 uv:        TEXCOORD0;
+                float4 position:  TEXCOORD1;
             };
-            
-            v2f vert (appdata_base v)
+
+            v2f vert(appdata_base v)
             {
-                v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.position = v.vertex;
-                o.uv = v.texcoord;
-                return o;
-            }
-           
-            fixed4 _Color;
-            float _LineWidth;
-            
-            float getDelta(float x){
-                return (sin(x)+1.0)/2.0;
+                v2f output;
+                output.vertex    = UnityObjectToClipPos(v.vertex);
+                output.position  = v.vertex;
+                output.uv        = v.texcoord;
+                return output;
             }
 
-            float onLine(float x, float y, float line_width, float edge_width){
-                return smoothstep(x-line_width/2.0-edge_width, x-line_width/2.0, y) - smoothstep(x+line_width/2.0, x+line_width/2.0+edge_width, y);
-            }
-            
-            fixed4 frag (v2f i) : SV_Target
+            float getDelta(float x)
             {
-                float2 pos = i.position.xy * 2.0;
-                fixed3 color = 1;
-                
-                return fixed4(color, 1.0);
+                return (sin(x) + 1) / 2;
+            }
+
+            float onLine(float a, float b, float width, float smoothing)
+            {
+                float halfLine = width / 2;
+                float edge     = halfLine * smoothing;
+                return smoothstep(a - halfLine - edge, a - halfLine,        b)
+                     - smoothstep(a + halfLine,        a + halfLine + edge, b);
+            }
+
+            fixed4 frag(v2f i) : SV_Target
+            {
+                float2 pos = i.position * 2;
+                fixed3 colour = _Colour * onLine(pos.y, lerp(-0.4, 0.4, getDelta(pos.x * UNITY_PI)), 0.05, 0.25);
+                return fixed4(colour, 1);
             }
             ENDCG
         }
