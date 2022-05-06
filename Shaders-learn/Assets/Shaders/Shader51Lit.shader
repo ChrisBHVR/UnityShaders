@@ -2,30 +2,28 @@
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
+        _MainTex("Texture", 2D) = "white" { }
     }
 
     SubShader
     {
-
         Tags { "RenderType" = "Opaque" }
 
         CGPROGRAM
         #pragma surface surf Lambert
+
+        sampler2D _MainTex;
 
         struct Input
         {
             float2 uv_MainTex;
         };
 
-        sampler2D _MainTex;
-
-        void surf (Input IN, inout SurfaceOutput o)
+        void surf(Input IN, inout SurfaceOutput OUT)
         {
-            o.Albedo = 1;
+            OUT.Albedo = tex2D(_MainTex, IN.uv_MainTex).rgb;
         }
         ENDCG
     }
-
     Fallback "Diffuse"
 }

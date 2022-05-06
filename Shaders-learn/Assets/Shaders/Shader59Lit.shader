@@ -2,13 +2,14 @@
 {
     Properties
     {
-        _Color ("Color", Color) = (1,1,1,1)
-        _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        _Smoothness ("Smoothness", Range(0,1)) = 0.5
-        _Metallic ("Metallic", Range(0,1)) = 0.0
-        _BumpMap ("Bumpmap", 2D) = "bump" {}
-        _RimColor ("Rim Color", Color) = (1,1,1,1)
-        _RimPower ("Rim Power", Range(0.5,8.0)) = 3.0
+        _MainTex("Albedo (RGB)", 2D)           = "white" { }
+        _NormalMap("Normal", 2D)               = "bump" { }
+        _Colour("Colour", Color)               = (1, 1, 1, 1)
+        _Smoothness("Smoothness", Range(0, 1)) = 0.5
+        _Metallic("Metallic", Range(0, 1))     = 0
+        _RimColour("Rim Colour", Color)        = (1, 1, 1, 1)
+        _RimPower("Rim Power", Range(0.5, 8))  = 3
+        _Extrusion("Extrusion", Range(-1, 1))  = 0
     }
 
     SubShader
@@ -18,50 +19,46 @@
 
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf Standard fullforwardshadows
+        #pragma surface surf Standard fullforwardshadows vertex:vert
 
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 3.0
 
         sampler2D _MainTex;
-        sampler2D _BumpMap;
+        sampler2D _NormalMap;
+        float _Smoothness;
+        float _Metallic;
+        fixed4 _Colour;
+        fixed4 _RimColour;
+        float _RimPower;
+        float _Extrusion;
 
         struct Input
         {
             float2 uv_MainTex;
-            float2 uv_BumpMap;
+            float2 uv_NormalMap;
             float3 viewDir;
         };
 
-        half _Smoothness;
-        half _Metallic;
-        fixed4 _Color;
-        fixed4 _RimColor;
-        float _RimPower;
 
-        // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
-        // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
-        // #pragma instancing_options assumeuniformscaling
         UNITY_INSTANCING_BUFFER_START(Props)
-        // put more per-instance properties here
         UNITY_INSTANCING_BUFFER_END(Props)
 
-        void surf (Input IN, inout SurfaceOutputStandard o)
+        void vert(inout appdata_full v)
         {
-            // Albedo comes from a texture tinted by color
-            fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-            o.Albedo = c.rgb;
-            // Metallic and smoothness come from slider variables
-            o.Metallic = _Metallic;
-            o.Smoothness = _Smoothness;
+            v.vertex.xyz += v.normal * _Extrusion * 0.01;
+        }
 
-            //Add bump mapping and rim lighting
-            o.Normal = UnpackNormal (tex2D (_BumpMap, IN.uv_BumpMap));
-
-            half rim = 1.0 - saturate(dot (normalize(IN.viewDir), o.Normal));
-            o.Emission = _RimColor.rgb * pow (rim, _RimPower);
-
-            o.Alpha = c.a;
+        void surf(Input IN, inout SurfaceOutputStandard OUT)
+        {
+            fixed4 colour  = tex2D(_MainTex, IN.uv_MainTex) * _Colour;
+            OUT.Albedo     = colour.rgb;
+            OUT.Alpha      = colour.a;
+            OUT.Metallic   = _Metallic;
+            OUT.Smoothness = _Smoothness;
+            OUT.Normal     = UnpackNormal(tex2D(_NormalMap, IN.uv_NormalMap));
+            float rim      = 1 - saturate(dot(normalize(IN.viewDir), OUT.Normal));
+            OUT.Emission   = _RimColour.rgb * pow(rim, _RimPower);
         }
         ENDCG
     }

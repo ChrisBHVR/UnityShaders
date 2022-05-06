@@ -3,7 +3,7 @@ using UnityEngine.AI;
 
 namespace ShadersLearn
 {
-    [RequireComponent(typeof(Animator), typeof (NavMeshAgent), typeof(Renderer))]
+    [RequireComponent(typeof(Animator), typeof (NavMeshAgent))]
     public class GirlController : MonoBehaviour
     {
         private static readonly int Position = Shader.PropertyToID("_Position");
@@ -31,10 +31,7 @@ namespace ShadersLearn
         private void FindAndSelectMaterial()
         {
             GameObject go = GameObject.Find("Plane");
-            if (!go) return;
-
-            this.material = GetComponent<Renderer>().material;
-            if (!this.material) return;
+            if (!go || !this.material) return;
 
             Vector3 position = this.transform.position;
             Vector4 pos      = new(position.x, position.y, position.z, Time.time);
