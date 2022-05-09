@@ -2,8 +2,8 @@
 {
     Properties
     {
-        _MainTex("Base (RGB)", 2D) = "white" {}
-        _Luminosity("Luminosity", Range(0, 1)) = 1.0
+        _MainTex("Base (RGB)", 2D)             = "white" { }
+        _Luminosity("Luminosity", Range(0, 1)) = 1
     }
 
     SubShader
@@ -25,16 +25,15 @@
 
             fixed4 frag (v2f_img i) : SV_Target
             {
-                fixed4 renderTex = tex2D(_MainTex, i.uv);
-                float luminosity = 0.299 * renderTex.r + 0.587 * renderTex.g + 0.114 * renderTex.b;
-                fixed finalColor = lerp(renderTex, luminosity, _Luminosity);
-                renderTex.rgb = finalColor;
-
+                fixed4 renderTex  = tex2D(_MainTex, i.uv);
+                float luminosity  = (0.299 * renderTex.r) + (0.587 * renderTex.g) + (0.114 * renderTex.b);
+                fixed finalColour = lerp(renderTex, luminosity, _Luminosity);
+                renderTex.rgb     = finalColour;
                 return renderTex;
-
             }
             ENDCG
         }
     }
+
     FallBack off
 }

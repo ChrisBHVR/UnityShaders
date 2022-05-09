@@ -10,7 +10,7 @@ namespace ShadersLearn
         private static readonly int Speed    = Animator.StringToHash("speed");
 
         [SerializeField]
-        private Material material;
+        private new Renderer renderer;
         private Animator anim;
         private Camera cam;
         private NavMeshAgent agent;
@@ -31,11 +31,11 @@ namespace ShadersLearn
         private void FindAndSelectMaterial()
         {
             GameObject go = GameObject.Find("Plane");
-            if (!go || !this.material) return;
+            if (!go || !this.renderer.material) return;
 
             Vector3 position = this.transform.position;
             Vector4 pos      = new(position.x, position.y, position.z, Time.time);
-            this.material.SetVector(Position, pos);
+            this.renderer.material.SetVector(Position, pos);
         }
 
         private void Update()
@@ -46,10 +46,10 @@ namespace ShadersLearn
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
                     this.agent.destination = hit.point;
-                    if (this.material)
+                    if (this.renderer.material)
                     {
                         Vector4 pos = new (hit.point.x, hit.point.y, hit.point.z, Time.time);
-                        this.material.SetVector(Position, pos);
+                        this.renderer.material.SetVector(Position, pos);
                     }
                 }
             }
@@ -73,12 +73,11 @@ namespace ShadersLearn
                 this.velocity = this.smoothDeltaPosition / Time.deltaTime;
             }
 
-            float speed     = this.velocity.magnitude;
-            bool shouldMove = speed > 0.5f; // && agent.remainingDistance > agent.radius;
-
             // Update animation parameters
+            float speed     = this.velocity.magnitude;
             this.anim.SetFloat(Speed, speed);
 
+            //bool shouldMove = speed > 0.5f; // && agent.remainingDistance > agent.radius;
             //GetComponent<LookAt>().lookAtTargetPosition = agent.steeringTarget + transform.forward;
         }
 
