@@ -31,7 +31,7 @@
                 SHADOW_COORDS(1)
             };
 
-            v2f vert (appdata_base v)
+            v2f vert(appdata_base v)
             {
                 v2f output;
                 output.pos     = UnityObjectToClipPos(v.vertex);
@@ -44,7 +44,7 @@
                 return output;
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            fixed4 frag(v2f i) : SV_Target
             {
                 float lighting = min(1, (i.diff * SHADOW_ATTENUATION(i)) + i.ambient);
                 fixed3 colour  = tex2D(_MainTex, i.uv).rgb * lighting;

@@ -6,24 +6,30 @@
 
     SubShader
     {
+        Tags { "Queue" = "Geometry-1" }
 
-        Tags { "Queue" = "Geometry" }
+        ColorMask 0
+        ZWrite Off
+
+        Stencil
+        {
+            Ref 1
+            Comp Always
+            Pass Replace
+        }
 
         CGPROGRAM
-
         #pragma surface surf Lambert
 
         struct Input
         {
-            float3 worldPos;//Because empty Input causes an error
+            float3 worldPos;
         };
 
-
-        void surf (Input IN, inout SurfaceOutput o)
+        void surf(Input IN, inout SurfaceOutput OUT)
         {
-            o.Albedo = fixed4(1,1,1,1);
+            OUT.Albedo = 1;
         }
-
         ENDCG
     }
 
