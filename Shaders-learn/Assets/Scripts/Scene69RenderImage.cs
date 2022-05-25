@@ -1,35 +1,39 @@
-﻿using UnityEngine;
+﻿using JetBrains.Annotations;
+using UnityEngine;
 
 namespace ShadersLearn
 {
     [ExecuteInEditMode]
     public class Scene69RenderImage : MonoBehaviour
     {
-        [SerializeField]
-        private Shader curShader;
-        [SerializeField]
-        private Color tintColor = Color.white;
-        private Material screenMat;
+        private static readonly int TintColour = Shader.PropertyToID("_TintColour");
 
+        [SerializeField]
+        private Shader shader;
+        [SerializeField]
+        private Color tintColour = Color.white;
+
+        private Material screenMaterial;
         private Material ScreenMaterial
         {
             get
             {
-                if (!this.screenMat)
+                if (!this.screenMaterial)
                 {
-                    this.screenMat = new(this.curShader)
+                    this.screenMaterial = new(this.shader)
                     {
                         hideFlags = HideFlags.HideAndDontSave
                     };
+                    this.ScreenMaterial.SetColor(TintColour, this.tintColour);
                 }
 
-                return this.screenMat;
+                return this.screenMaterial;
             }
         }
 
         private void Start()
         {
-            if (!this.curShader || !this.curShader.isSupported)
+            if (!this.shader || !this.shader.isSupported)
             {
                 this.enabled = false;
             }
@@ -37,9 +41,22 @@ namespace ShadersLearn
 
         private void OnDisable()
         {
-            if (this.screenMat)
+            if (this.screenMaterial)
             {
-                DestroyImmediate(this.screenMat);
+                DestroyImmediate(this.screenMaterial);
+            }
+        }
+
+        private void OnRenderImage(RenderTexture source, RenderTexture destination)
+        {
+            if (this.shader)
+            {
+                this.ScreenMaterial.SetColor(TintColour, this.tintColour);
+                Graphics.Blit(source, destination, this.ScreenMaterial);
+            }
+            else
+            {
+                Graphics.Blit(source, destination);
             }
         }
     }

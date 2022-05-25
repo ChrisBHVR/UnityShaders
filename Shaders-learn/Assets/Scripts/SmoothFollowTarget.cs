@@ -7,31 +7,25 @@ namespace ShadersLearn
         [SerializeField]
         private GameObject target;
         [SerializeField]
-        private float[] limitsX;
-        private Vector3 offset;
-        private bool b;
+        private Vector2 limitsX = new(float.NegativeInfinity, float.PositiveInfinity);
+
+        private Vector3? offset;
 
         private void LateUpdate()
         {
             if (!this.target)
             {
                 this.target = GameObject.FindGameObjectWithTag("Player");
-                return;
+                if (!this.target) return;
             }
 
-            if (!this.b)
-            {
-                this.offset = this.transform.position - this.target.transform.position;
-                this.b = true;
-            }
+            // ReSharper disable once LocalVariableHidesMember
+            Transform transform = this.transform;
+            Vector3 targetPosition = this.target.transform.position;
+            this.offset ??= transform.position - targetPosition;
 
-            Vector3 pos = this.target.transform.position + this.offset;
-            if (this.limitsX is { Length: 2 })
-            {
-                pos.x = Mathf.Clamp(pos.x, this.limitsX[0], this.limitsX[1]);
-                //Debug.Log("pos.x clamped to " + pos.x);
-            }
-
+            Vector3 pos = targetPosition + this.offset.Value;
+            pos.x = Mathf.Clamp(pos.x, this.limitsX[0], this.limitsX[1]);
             this.transform.position = Vector3.Lerp(this.transform.position, pos, Time.deltaTime * 5f);
             this.transform.LookAt(this.target.transform);
         }
